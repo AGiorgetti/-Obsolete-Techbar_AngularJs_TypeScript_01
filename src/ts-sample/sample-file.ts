@@ -8,7 +8,17 @@ interface ILogger {
 
 class SampleLogger implements ILogger {
 
+    /**
+     * will be transpiled to a prototype function
+     */
     log(message: string): void {
+        console.log(message);
+    }
+
+    /**
+     * will be transpiled to a member function
+     */
+    log2 = (message: string): void => {
         console.log(message);
     }
 }
