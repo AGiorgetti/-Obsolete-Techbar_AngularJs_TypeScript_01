@@ -53,8 +53,12 @@ edit the file settings.json and specify the correct absolute path for "typescrip
 
 Tricks:
 
-- if you place a tsconfig.json file on the root VSCode will internally pick that and use it. This way any .ts and .d.ts will be read and compiled and there will be no need to add /// <reference path="tsd.d.ts" /> all around.
-- if you place a jsconfig.json file on the root VSCode will internally pick that and use it to provide some JavaScript goodies.
+- if you place a *tsconfig.json* file on the root VSCode will internally pick that and use it. 
+  This way any .ts and .d.ts will be read and compiled and there will be no need to add /// <reference path="tsd.d.ts" /> all around.
+  No comments are allowed in this file with TypeScript 1.7 and earlier versions.
+  The settings should match when you have in the build script of your task runner (gulpfile.js).
+  
+- if you place a *jsconfig.json* file on the root VSCode will internally pick that and use it to provide some JavaScript goodies.
 
 Suggested Plugins to install (ext install ...):
 tslint
@@ -74,6 +78,3 @@ Purge global caches:
 -----------------------
 
 tsd purge
-
-
-				
