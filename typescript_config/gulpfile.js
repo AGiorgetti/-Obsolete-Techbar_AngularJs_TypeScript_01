@@ -41,19 +41,13 @@ gulp.task("tslint", function () {
         .pipe(tslint.report("verbose"));
 });
 
-// build the javascript sample code
-gulp.task("build-js", ["copy-templates", "copy-js"]);
-
-// build with sourcemaps support
-gulp.task("build-ts", ["copy-templates", "copy-js", "compile-ts", "inject"]);
-
 gulp.task("compile-ts", function () {
     var tsResult = source
         .pipe(sourcemaps.init())
         .pipe(ts(tsOptions));
     return tsResult.js
-    //.pipe(sourcemaps.write(".", {includeContent: true})) // sourcemaps will be generated on an external file
-    //.pipe(sourcemaps.write()) // sourcemap added to the source file (does not work either works with vscode debugger)
+        //.pipe(sourcemaps.write(".", {includeContent: true})) // sourcemaps will be generated on an external file
+        //.pipe(sourcemaps.write()) // sourcemap added to the source file (does not work either works with vscode debugger)
         .pipe(sourcemaps.write(".", { // allow VSCode debugger to work: https://github.com/ivogabe/gulp-typescript/issues/201
             // Return relative source map root directories per file.
             sourceRoot: function (file) {
@@ -62,7 +56,7 @@ gulp.task("compile-ts", function () {
             }
         }))
     
-    /*
+    /* not working
     .pipe(sourcemaps.write({ // allow VSCode debugger to work: https://github.com/ivogabe/gulp-typescript/issues/201
       // Return relative source map root directories per file.
       sourceRoot: function (file) {
@@ -73,11 +67,6 @@ gulp.task("compile-ts", function () {
     */
         .pipe(gulp.dest(paths.build));
 });
-
-gulp.task("watch", function () {
-    gulp.watch(tsFiles, ['build-ts']);
-});
-
 
 // inject compiled and artifacts
 
@@ -93,12 +82,21 @@ gulp.task("copy-templates", function () {
 
 // https://github.com/klei/gulp-inject/wiki/Clarifying-injected-paths
 gulp.task("inject", 
-    /* ["compile-ts"], */
+    ["compile-ts"],
     function () {
         gulp.src(paths.src + "index.html")
             .pipe(inject(
                 gulp.src([paths.build + "**/*.js"]).pipe(angularFilesort())
                 , { relative: true }))
             .pipe(gulp.dest(paths.build));
-
     });
+    
+    // build the javascript sample code
+gulp.task("build-js", ["copy-templates", "copy-js"]);
+
+// build with sourcemaps support
+gulp.task("build-ts", ["copy-templates", "copy-js", "compile-ts", "inject"]);
+
+gulp.task("watch", function () {
+    gulp.watch(tsFiles, ['build-ts']);
+});
